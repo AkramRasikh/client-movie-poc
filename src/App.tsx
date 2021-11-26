@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+import { collection, getDocs } from "firebase/firestore";
+import db from "./firebase-service";
 
 function App() {
+  const [movies, setMovies] = useState<string[]>([]);
+  useEffect(() => {
+    const initialiseFirebase = async () => {
+      try {
+        const result = await getDocs(collection(db, "movies"));
+        const movieList = result.docs.map((one) => one.data().title);
+        setMovies(movieList);
+      } catch (error) {
+        console.error("err: ", error);
+      }
+    };
+
+    initialiseFirebase();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Movies</h1>
+      {movies ? (
+        <div>
+          {" "}
+          {movies.map((movieTitle, index) => (
+            <p key={index}>{movieTitle}</p>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
