@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { collection, getDocs } from "firebase/firestore";
-import db from "./firebase-service";
+import { getMovies } from "./firebase-methods";
 
 function App() {
   const [movies, setMovies] = useState<string[]>([]);
   useEffect(() => {
     const initialiseFirebase = async () => {
       try {
-        const result = await getDocs(collection(db, "movies"));
-        const movieList = result.docs.map((one) => one.data().title);
-        setMovies(movieList);
+        console.log("gettig here!");
+        const result = await getMovies();
+        console.log("results: ", result);
+        setMovies(result);
       } catch (error) {
         console.error("err: ", error);
       }

@@ -1,9 +1,12 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import * as firebaseMethods from "./firebase-methods";
+import App from "./App";
+jest.mock("./firebase-methods");
 
-test('renders learn react link', () => {
+test("renders movie list", async () => {
+  const getMoviesMock = firebaseMethods.getMovies as jest.Mock;
+  await getMoviesMock.mockImplementation(() => [{ title: "movie!" }]);
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const linkElement = screen.findByText(/movie!/i);
+  expect(linkElement).toBeDefined();
 });
