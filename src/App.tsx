@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import { getMovies } from "./firebase-methods";
+import { useEffect, useState } from 'react';
+import { getMoviesAPI } from './api-calls';
+import './App.css';
+import Home from './page/home';
+import { Movie } from './types/movies';
 
 function App() {
-  const [movies, setMovies] = useState<string[]>([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
   useEffect(() => {
     const initialiseFirebase = async () => {
       try {
-        console.log("gettig here!");
-        const result = await getMovies();
-        console.log("results: ", result);
-        setMovies(result);
+        const movieData = await getMoviesAPI();
+        setMovies(movieData);
       } catch (error) {
-        console.error("err: ", error);
+        console.error('err: ', error);
       }
     };
 
@@ -21,15 +21,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Movies</h1>
-      {movies ? (
-        <div>
-          {" "}
-          {movies.map((movieTitle, index) => (
-            <p key={index}>{movieTitle}</p>
-          ))}
-        </div>
-      ) : null}
+      <Home movies={movies} />
     </div>
   );
 }
